@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Credentials / secrets — never commit
+*.pem
+*.key
+*.p12
+*.pfx
+.env
+.env.*
+credentials*.json
+secrets*.json
+*token*.json
+
+# macOS
+.DS_Store
