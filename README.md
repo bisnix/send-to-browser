@@ -133,6 +133,10 @@ Download the new version into the **same folder**, re-run the installer (`./inst
      powershell -ExecutionPolicy Bypass -File .\install.ps1 -Uninstall
      ```
 
+## License
+
+[MIT](LICENSE) © 2026 Wildan Alkatiri. Free to use, modify and share.
+
 ---
 
 # Developer documentation
