@@ -3,16 +3,32 @@ const MENU_LINK_ID = "open-link-in-brave";
 const MENU_PAGE_ID = "open-tab-in-brave";
 const TIMEOUT_MS = 4000;
 
+// Deteksi browser tempat extension berjalan, lalu target = browser lawannya.
+// Di Brave -> buka di Arc; di browser lain (Arc/Chrome/Edge) -> buka di Brave.
+function isRunningInBrave() {
+  if (typeof navigator.brave !== "undefined") return true;
+  const brands = navigator.userAgentData?.brands || [];
+  return brands.some((b) => /brave/i.test(b.brand));
+}
+
+const TARGET = isRunningInBrave()
+  ? { id: "arc", label: "Arc" }
+  : { id: "brave", label: "Brave" };
+
+console.log("[Open in Brave] target browser:", TARGET.id);
+
+chrome.action.setTitle({ title: "Open in " + TARGET.label });
+
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
       id: MENU_LINK_ID,
-      title: "Open link in Brave",
+      title: "Open link in " + TARGET.label,
       contexts: ["link"]
     });
     chrome.contextMenus.create({
       id: MENU_PAGE_ID,
-      title: "Open this tab in Brave",
+      title: "Open this tab in " + TARGET.label,
       contexts: ["page"]
     });
   });
@@ -35,7 +51,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       reportError("Menu clicked but linkUrl is empty.");
       return;
     }
-    openUrlInBrave(info.linkUrl);
+    openUrlInTarget(info.linkUrl);
     return;
   }
 
@@ -47,19 +63,19 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       reportError("Could not determine the current tab URL.");
       return;
     }
-    openUrlInBrave(url);
+    openUrlInTarget(url);
     return;
   }
 });
 
-// Klik ikon toolbar = buka tab aktif di Brave.
+// Klik ikon toolbar = buka tab aktif di browser target.
 chrome.action.onClicked.addListener(async (tab) => {
   const url = tab?.url || (await getActiveTabUrl());
   if (!url) {
     reportError("Could not determine the current tab URL.");
     return;
   }
-  openUrlInBrave(url);
+  openUrlInTarget(url);
 });
 
 async function getActiveTabUrl() {
@@ -75,8 +91,8 @@ async function getActiveTabUrl() {
   }
 }
 
-function openUrlInBrave(url) {
-  console.log("[Open in Brave] opening:", url);
+function openUrlInTarget(url) {
+  console.log("[Open in Brave] opening in", TARGET.id + ":", url);
 
   chrome.action.setBadgeBackgroundColor({ color: "#1a73e8" });
   chrome.action.setBadgeText({ text: "..." });
@@ -92,7 +108,7 @@ function openUrlInBrave(url) {
     );
   }, TIMEOUT_MS);
 
-  chrome.runtime.sendNativeMessage(HOST_NAME, { url }, (response) => {
+  chrome.runtime.sendNativeMessage(HOST_NAME, { url, target: TARGET.id }, (response) => {
     if (settled) return;
     settled = true;
     clearTimeout(timer);

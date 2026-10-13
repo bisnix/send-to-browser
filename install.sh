@@ -33,6 +33,10 @@ if [ ! -d "/Applications/Brave Browser.app" ]; then
   echo "         Make sure the app name is exactly 'Brave Browser'." >&2
 fi
 
+if [ ! -d "/Applications/Arc.app" ]; then
+  echo "Warning: 'Arc.app' is not in /Applications (needed for Brave -> Arc)." >&2
+fi
+
 mkdir -p "$HOST_DIR"
 cp "$SOURCE_SCRIPT" "$HOST_SCRIPT"
 chmod +x "$HOST_SCRIPT"
@@ -74,6 +78,6 @@ echo "Interpreter : $PYTHON_BIN"
 echo
 echo "Done. Final steps:"
 echo "  1. Reload the extension at chrome://extensions / arc://extensions"
-echo "  2. Right-click a link -> 'Open in Brave'"
+echo "  2. Right-click a link -> 'Open link in Brave' (or 'in Arc' when inside Brave)"
 echo
 echo "Extension ID in use: $EXTENSION_ID"

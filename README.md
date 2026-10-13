@@ -7,11 +7,15 @@ current tab in the **Brave** browser via right-click menu or toolbar button.
 - Right-click page background → **Open this tab in Brave**
 - Click the toolbar icon → opens the active tab in Brave
 
+**Auto-reverse inside Brave:** when the extension runs *in Brave* it detects that
+(`navigator.brave` / `userAgentData.brands`) and flips the target to **Arc** — menus
+become "Open link in Arc" / "Open this tab in Arc". In any other browser the target is Brave.
+
 ## How it works
 
 ```
 Extension (background.js) --native messaging--> com.openinbrave.host (Python)
-    { "url": "https://..." }  -->  { "status": "ok" }  -->  `open -a "Brave Browser" <url>`
+    { "url": "https://...", "target": "brave"|"arc" }  -->  `open -a "Brave Browser"|"Arc" <url>`
 ```
 
 | File | Role |
@@ -31,7 +35,7 @@ Pinned extension ID: `baohkehfoojhmdhbdacnnknpjbonbmco`
 - macOS with **Brave Browser** installed in `/Applications` (exactly `Brave Browser.app`).
 - `python3` on PATH.
 - A Chromium browser to load the extension unpacked (Chrome / Arc / Brave / Edge).
-- Brave Browser installed at `/Applications/Brave Browser.app` (name must match exactly; edit `BRAVE_APP_NAME` in `native-host/open_in_brave.py` otherwise).
+- Brave Browser installed at `/Applications/Brave Browser.app` (name must match exactly; edit `TARGET_APPS` in `native-host/open_in_brave.py` otherwise). Arc must be at `/Applications/Arc.app` for the Brave → Arc direction.
 
 ## Setup (fresh clone — normal case)
 
@@ -107,6 +111,6 @@ print(''.join(chr((b>>4)+97)+chr((b&15)+97) for b in h))
 - **Source of truth for IDs:** `manifest.json` → `"key"` (public key) determines the extension ID; `install.sh` → `EXTENSION_ID` must match the ID shown at `chrome://extensions` after loading unpacked.
 - **Verify ID derivation:** `python3 -c` snippet in "Rotating" section above; expected `baohkehfoojhmdhbdacnnknpjbonbmco` for the committed key.
 - **Never commit:** `*.pem`, `*.key`, `*.p12`, `.env*`, `*credentials*.json`, `*secrets*.json` (see `.gitignore`). Never print the `.pem` contents into logs/PRs.
-- **Native protocol:** 4-byte little-endian length prefix + UTF-8 JSON. Request `{ "url": "<http(s)://...>" }`, response `{ "status": "ok" }` or `{ "status": "error", "message": "..." }`.
+- **Native protocol:** 4-byte little-endian length prefix + UTF-8 JSON. Request `{ "url": "<http(s)://...>", "target": "brave" | "arc" }` (target whitelisted in `TARGET_APPS`, defaults to `brave`), response `{ "status": "ok" }` or `{ "status": "error", "message": "..." }`.
 - **Host install locations:** `install.sh` writes `com.openinbrave.host.json` into each browser's `NativeMessagingHosts` dir and copies the runnable host to `$HOME/Library/Application Support/OpenInBrave/open_in_brave.py` with an absolute-python shebang.
 - **Validate changes:** `python3 -c "import json; json.load(open('manifest.json'))"` and `node --check background.js`; then reload unpacked + right-click test.

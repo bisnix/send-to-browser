@@ -5,7 +5,12 @@ import subprocess
 import sys
 import time
 
-BRAVE_APP_NAME = "Brave Browser"
+# Whitelist target -> nama app macOS. Extension hanya boleh memilih dari sini.
+TARGET_APPS = {
+    "brave": "Brave Browser",
+    "arc": "Arc",
+}
+DEFAULT_TARGET = "brave"
 LOG_PATH = "/tmp/openinbrave.log"
 
 
@@ -38,18 +43,24 @@ def main():
     message = read_message()
     log("message received: %r" % (message,))
     url = (message or {}).get("url")
+    target = (message or {}).get("target") or DEFAULT_TARGET
 
     if not url:
         send_message({"status": "error", "message": "URL not found"})
         return
 
+    app_name = TARGET_APPS.get(target)
+    if not app_name:
+        send_message({"status": "error", "message": "Unknown target: %s" % target})
+        return
+
     try:
         proc = subprocess.Popen(
-            ["open", "-a", BRAVE_APP_NAME, url],
+            ["open", "-a", app_name, url],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
-        log("open launched, pid=%s url=%s" % (proc.pid, url))
+        log("open launched, pid=%s app=%s url=%s" % (proc.pid, app_name, url))
         send_message({"status": "ok"})
     except Exception as exc:
         log("failed to launch open: %s" % exc)
