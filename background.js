@@ -24,7 +24,7 @@ const AUTO_ORDER_IN_BRAVE = ["arc", "chrome", "edge", "vivaldi", "opera", "firef
 //             tidak ada = mode otomatis (1 tujuan, menu datar)
 
 function log(...args) {
-  console.log("[Open in Browser]", ...args);
+  console.log("[Send to Browser]", ...args);
 }
 
 // ---------------------------------------------------------------------------
@@ -204,7 +204,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
 // Aksi
 
 function reportError(message) {
-  console.error("[Open in Browser]", message);
+  console.error("[Send to Browser]", message);
   chrome.action.setBadgeBackgroundColor({ color: "#d93025" });
   chrome.action.setBadgeText({ text: "ERR" });
   chrome.tabs.create({
@@ -265,7 +265,7 @@ async function getActiveTabUrl() {
     });
     return activeTab?.url || null;
   } catch (e) {
-    console.error("[Open in Browser] getActiveTabUrl failed:", e);
+    console.error("[Send to Browser] getActiveTabUrl failed:", e);
     return null;
   }
 }
