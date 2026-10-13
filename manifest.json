@@ -1,16 +1,21 @@
 {
   "manifest_version": 3,
-  "name": "Open in Brave / Arc",
-  "version": "1.1.0",
-  "description": "Right-click a link or page, or click the toolbar icon, to open the link / current tab in Brave (or in Arc when running inside Brave).",
+  "name": "Open in Browser",
+  "version": "1.2.0",
+  "description": "Right-click a link or page, or click the toolbar icon, to open the link / current tab in another browser (Brave, Arc, Chrome, Edge, ...). Works out of the box; pick more browsers in Settings.",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwrzgELjtwuRh9FPG8ueDFDIHwpk30hCCOsKlXtZ/v9kzIC3AygpB6BYxgaDjGqkiamrhNupGJMd722/7NtL8svgPo1FGysJIqIJT0ah0e3n1BbXr9yJS3s9ulRvpfYv8Z6eIHt/vG52krMLbxiMedhRW6ZY+pX5r4KTMTZo/T2BeSDo0+LUlN28r0YU/p25C8H2R28q32H+Y6moKb22VAbfB6HjMG6jcwqTD0/3eqE3RFXxTBfYUmy4t88VvrLCIe4bDaTYOPciIzigoFNQ9V/9BaWpe8aaHKNd8+yV9AWTF8XHSVOa+B4TBiCfTUUwno0qGLkOesz4SjElGT67mxwIDAQAB",
   "permissions": [
     "contextMenus",
     "nativeMessaging",
-    "activeTab"
+    "activeTab",
+    "storage"
   ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
   "action": {
-    "default_title": "Open in Brave / Arc",
+    "default_title": "Open in Browser",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",
