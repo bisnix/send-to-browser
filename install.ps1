@@ -1,4 +1,4 @@
-# Windows installer for the Open in Browser native host.
+# Windows installer for the Send to Browser native host.
 #
 #   powershell -ExecutionPolicy Bypass -File .\install.ps1              # install
 #   powershell -ExecutionPolicy Bypass -File .\install.ps1 -Uninstall   # remove

@@ -1,4 +1,4 @@
-# Open in Browser
+# Send to Browser
 
 Open any link — or the page you're on — in **another browser** with one right-click.
 
@@ -6,7 +6,7 @@ Open any link — or the page you're on — in **another browser** with one righ
 
 ## What is this?
 
-**Open in Browser** is a small browser extension for people who use more than one browser.
+**Send to Browser** is a small browser extension for people who use more than one browser.
 Right-click a link and choose **"Open link in Brave"** (or Arc, Chrome, Edge, …), and the link
 opens in that browser right away. No more copying and pasting URLs between browsers.
 
@@ -56,10 +56,10 @@ Installation has **two parts**:
 Download this repository: **Code → Download ZIP** on GitHub, then unzip it. Or clone it:
 
 ```bash
-git clone https://github.com/bisnix/open-in-brave.git
+git clone https://github.com/bisnix/send-to-browser.git
 ```
 
-Keep the folder somewhere permanent (e.g. `~/Apps/open-in-browser`). The browser loads the
+Keep the folder somewhere permanent (e.g. `~/Apps/send-to-browser`). The browser loads the
 extension from this folder, so don't delete it afterwards.
 
 ### macOS
