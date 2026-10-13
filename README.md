@@ -1,23 +1,141 @@
 # Open in Browser
 
-Chromium extension (Manifest V3) + small Python helper that opens a link or the current tab
-in **another browser** — Brave, Arc, Chrome, Edge, Vivaldi, Opera, Chromium, Firefox or Safari.
-Works on **macOS** and **Windows**.
+Open any link — or the page you're on — in **another browser** with one right-click.
 
-- Right-click a link → **Open link in Brave**
-- Right-click page background → **Open this tab in Brave**
-- Click the toolbar icon → opens the active tab in the default browser
+<!-- Add a screenshot/GIF of the right-click menu here -->
 
-**Zero config by default.** The extension detects which browser it is running in and picks
-one target automatically: inside Brave → **Arc**, anywhere else → **Brave**. If that browser
-isn't installed it falls back to the next installed one (Arc, Chrome, Edge, …). One target
-means a plain right-click item, no submenu.
+## What is this?
 
-**Optional — more browsers.** Extension *Options* → **Choose browsers**: tick any installed
-browsers and pick a default. With 2+ targets the menu becomes a submenu
-(`Open link in ▸ Brave / Edge / …`); the toolbar button always uses the default. Settings are
-per browser (each browser has its own copy of the extension). Unticking everything returns to
-Automatic.
+**Open in Browser** is a small browser extension for people who use more than one browser.
+Right-click a link and choose **"Open link in Brave"** (or Arc, Chrome, Edge, …), and the link
+opens in that browser right away. No more copying and pasting URLs between browsers.
+
+It works on **macOS** and **Windows**, and you can install it in any Chromium-based browser
+(Chrome, Arc, Brave, Edge, Vivaldi, Opera, …).
+
+## Why?
+
+Many people keep two browsers for different things, for example Arc for work and Brave for
+personal browsing, or Chrome for one Google account and Edge for another. Moving a link from
+one to the other usually means copy → switch app → paste. This extension makes it one click.
+
+## Features
+
+- **Right-click a link** → *Open link in Brave*
+- **Right-click the page** → *Open this tab in Brave*
+- **Click the toolbar icon** → open the current tab in your default target browser
+- **Zero setup:** the extension detects which browser you're in and picks the other one
+  automatically. Inside Brave it opens Arc; in any other browser it opens Brave. If that browser
+  isn't installed, it uses the next one you do have.
+- **More than two browsers?** Pick several in *Settings*. The right-click item then becomes a
+  submenu (*Open link in ▸ Brave / Edge / Chrome*). With only one target it stays a single item.
+- **Private:** everything happens on your computer. No accounts, no tracking, no network calls.
+
+### Supported browsers
+
+| Open links **in** (target) | macOS | Windows |
+|---|:-:|:-:|
+| Brave, Chrome, Edge, Vivaldi, Opera, Chromium, Firefox | ✅ | ✅ |
+| Arc | ✅ | ⚠️ best effort |
+| Safari | ✅ | — |
+
+The extension itself runs in Chromium-based browsers (Chrome, Arc, Brave, Edge, Vivaldi, …).
+Firefox and Safari can be *targets* but can't run the extension.
+
+## Installation
+
+Installation has **two parts**:
+
+1. **A small helper app.** Browsers don't allow extensions to open other apps by themselves, so a
+   tiny helper (a Python script) does the opening. The installer puts it in your user folder
+   and registers it with your browsers. No admin rights needed, and nothing changes system-wide.
+2. **The extension** itself, loaded into your browser(s).
+
+### Step 0 — Download
+
+Download this repository: **Code → Download ZIP** on GitHub, then unzip it. Or clone it:
+
+```bash
+git clone https://github.com/bisnix/open-in-brave.git
+```
+
+Keep the folder somewhere permanent (e.g. `~/Apps/open-in-browser`). The browser loads the
+extension from this folder, so don't delete it afterwards.
+
+### macOS
+
+1. **Make sure Python 3 is installed.** Open *Terminal* and run `python3 --version`.
+   If macOS asks to install the *Command Line Developer Tools*, click **Install** and wait, or
+   install Python from [python.org](https://www.python.org/downloads/).
+2. **Install the helper.** In Terminal, go to the downloaded folder and run:
+   ```bash
+   ./install.sh
+   ```
+   It ends by listing the browsers it found, e.g. `Browsers found: Brave, Arc, Chrome`.
+3. **Load the extension** in each browser you want to use it in:
+   - Open `chrome://extensions` (Arc: `arc://extensions`, Brave: `brave://extensions`,
+     Edge: `edge://extensions`)
+   - Turn on **Developer mode** (top-right toggle)
+   - Click **Load unpacked** and select the downloaded folder
+4. **Try it:** right-click any link → **Open link in …**
+
+### Windows
+
+1. **Install Python 3** from [python.org](https://www.python.org/downloads/). On the first
+   installer screen, tick **"Add python.exe to PATH"**.
+2. **Install the helper.** Open the downloaded folder, click the address bar, type
+   `powershell`, press Enter, then run:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\install.ps1
+   ```
+3. **Load the extension** in each browser: open `chrome://extensions` (or `edge://extensions`,
+   `brave://extensions`) → turn on **Developer mode** → **Load unpacked** → select the folder.
+4. **Try it:** right-click any link → **Open link in …**
+
+## Usage
+
+| Action | Result |
+|---|---|
+| Right-click a link → *Open link in X* | Opens that link in X |
+| Right-click empty space on a page → *Open this tab in X* | Opens the current page in X |
+| Click the extension's toolbar icon | Opens the current page in your default target |
+
+The toolbar badge briefly shows **OK** on success. If something goes wrong it shows **ERR**
+and opens a page with the error message (see [Troubleshooting](#troubleshooting)).
+
+### Settings (optional)
+
+Right-click the extension icon → **Options**:
+
+- **Automatic** *(default)*: one target picked for you. Simple right-click item.
+- **Choose browsers**: tick the browsers you want and pick a **default**. With 2 or more
+  ticked, the right-click item becomes a submenu. The toolbar icon always uses the default.
+
+Settings are saved separately in each browser, so you can choose "Arc" inside Brave and
+"Brave" inside Arc. Untick everything to go back to Automatic.
+
+## Updating
+
+Download the new version into the **same folder**, re-run the installer (`./install.sh` or
+`install.ps1`), then click **Reload** on the extension in `chrome://extensions`.
+
+## Uninstalling
+
+1. Remove the extension in `chrome://extensions` (in each browser).
+2. Remove the helper:
+   - **macOS:**
+     ```bash
+     rm -rf ~/Library/Application\ Support/OpenInBrowser
+     find ~/Library/Application\ Support -name com.openinbrowser.host.json -path '*NativeMessagingHosts*' -delete
+     ```
+   - **Windows:**
+     ```powershell
+     powershell -ExecutionPolicy Bypass -File .\install.ps1 -Uninstall
+     ```
+
+---
+
+# Developer documentation
 
 ## How it works
 
@@ -42,66 +160,15 @@ Extension (background.js) --native messaging--> com.openinbrowser.host (Python)
 | `tools/generate_icons.py` | Regenerates `icons/` (no dependencies). |
 | `error.html` / `error.js` | Error page shown when the host call fails. |
 
-Pinned extension ID: `baohkehfoojhmdhbdacnnknpjbonbmco`
+## Setup notes
 
-## Prerequisites
-
-### macOS
-
-- macOS with at least one *other* browser to open links in. Browsers are found in `/Applications` or `~/Applications` by their standard app name (see `BROWSERS` in `native-host/open_in_browser.py`).
-- `python3` on PATH.
-- A Chromium browser to load the extension unpacked (Chrome / Arc / Brave / Edge).
-
-### Windows
-
-- Windows 10/11 with at least one other browser installed (found via the `App Paths\<exe>` registry key or the usual install folders).
-- **Python 3** from python.org (tick *Add python.exe to PATH*) or the `py` launcher. The Microsoft Store `python.exe` stub is not enough — the installer actually runs the interpreter to check.
-- Arc for Windows is detected on a best-effort basis — see the Arc note under Troubleshooting.
-
-## Setup (fresh clone — normal case)
-
-### macOS
-
-> You do **NOT** need any credential file for normal setup. The public `"key"` in
-> `manifest.json` is already committed and keeps the extension ID stable.
-
-```bash
-# 1. Install the native host (copies the .py out of ~/Documents — macOS TCC
-#    blocks execution from Documents/Desktop/Downloads — and writes the
-#    NativeMessagingHosts manifests for all supported browsers)
-./install.sh
-
-# 2. Load the extension unpacked in your Chromium browser:
-#    chrome://extensions (or arc://extensions) → Developer mode → Load unpacked
-#    → select this folder.
-#    Confirm the extension ID reads: baohkehfoojhmdhbdacnnknpjbonbmco
-
-# 3. Test: right-click any link → "Open link in <browser>",
-#    or right-click page background → "Open this tab in <browser>".
-#    Optional: extension Options to add more browsers.
-#    The toolbar badge shows OK on success, ERR + error page on failure.
-```
-
-Debug log: the host appends to `/tmp/openinbrowser.log`.
-
-### Windows
-
-```powershell
-# 1. Install the native host (copies the host to %LOCALAPPDATA%\OpenInBrowser, writes
-#    com.openinbrowser.host.json there, and registers it under
-#    HKCU\Software\{Google\Chrome, Chromium, BraveSoftware\Brave-Browser, Microsoft\Edge}\NativeMessagingHosts)
-powershell -ExecutionPolicy Bypass -File .\install.ps1
-
-# 2. Load the extension unpacked: chrome://extensions (edge://, brave://) → Developer mode
-#    → Load unpacked → select this folder. ID must be baohkehfoojhmdhbdacnnknpjbonbmco.
-
-# 3. Test as on macOS. To remove the host later:
-powershell -ExecutionPolicy Bypass -File .\install.ps1 -Uninstall
-```
-
-No admin rights needed (per-user only). Debug log: `%TEMP%\openinbrowser.log`.
-On Windows the host only accepts URLs that start with a scheme (`https:`, `file:` …) so a
-crafted URL can never be passed to the browser as a `--switch`.
+- Pinned extension ID: `baohkehfoojhmdhbdacnnknpjbonbmco` (from the public `"key"` in
+  `manifest.json`). You do **not** need any credential file for normal setup.
+- macOS: `install.sh` copies the host out of the repo folder because macOS TCC blocks the
+  browser-launched host from running inside `~/Documents`, `~/Desktop` or `~/Downloads`.
+- Debug log: `/tmp/openinbrowser.log` (macOS), `%TEMP%\openinbrowser.log` (Windows).
+- Windows: per-user only (HKCU + `%LOCALAPPDATA%`). The host only accepts URLs that start with a
+  scheme (`https:`, `file:` …), so a crafted URL can never be passed to the browser as a `--switch`.
 
 ## Credential / git-ignored files
 
@@ -140,6 +207,9 @@ print(''.join(chr((b>>4)+97)+chr((b&15)+97) for b in h))
 ```
 
 ## Troubleshooting
+
+When something fails, the toolbar shows **ERR** and an error page opens with the exact message.
+Find it below.
 
 ### macOS
 
