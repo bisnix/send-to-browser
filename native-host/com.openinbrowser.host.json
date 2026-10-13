@@ -1,7 +1,7 @@
 {
-  "name": "com.openinbrave.host",
+  "name": "com.openinbrowser.host",
   "description": "Opens links in Brave Browser",
-  "path": "/Users/macminim2/Library/Application Support/OpenInBrave/open_in_brave.py",
+  "path": "__HOST_PATH__",
   "type": "stdio",
   "allowed_origins": [
     "chrome-extension://baohkehfoojhmdhbdacnnknpjbonbmco/"

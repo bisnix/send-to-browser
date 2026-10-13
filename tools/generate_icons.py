@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the "Open in Brave" extension icons (no external dependencies).
+"""Generate the "Open in Browser" extension icons (no external dependencies).
 
 Run from the repo root:  python3 tools/generate_icons.py
 Outputs PNG files into icons/.
