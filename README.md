@@ -2,7 +2,9 @@
 
 Open any link — or the page you're on — in **another browser** with one right-click.
 
-<!-- Add a screenshot/GIF of the right-click menu here -->
+[![Watch the demo: Send to Browser - one click to switch browsers](https://img.youtube.com/vi/xfJU9Pwa7d8/maxresdefault.jpg)](https://youtu.be/xfJU9Pwa7d8)
+
+▶️ **[Watch the demo on YouTube](https://youtu.be/xfJU9Pwa7d8)** (Indonesian)
 
 ## What is this?
 
